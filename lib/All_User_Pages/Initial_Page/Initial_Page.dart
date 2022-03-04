@@ -119,8 +119,9 @@ class _Initial_PageState extends State<Initial_Page> {
                           width: 350,
                           child: Center(
                               child: Padding(
-                            padding: const EdgeInsets.only(left: 37),
+                            padding: const EdgeInsets.only(left: 0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
                                   height: 30,
@@ -165,8 +166,9 @@ class _Initial_PageState extends State<Initial_Page> {
                           width: 350,
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 40),
+                              padding: const EdgeInsets.only(left: 0),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
                                     height: 35,

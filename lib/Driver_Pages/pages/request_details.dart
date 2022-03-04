@@ -114,6 +114,9 @@ class _request_detailsState extends State<request_details> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Name : ",
                           style: TextStyle(
@@ -134,6 +137,9 @@ class _request_detailsState extends State<request_details> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "From : ",
                           style: TextStyle(
@@ -150,6 +156,9 @@ class _request_detailsState extends State<request_details> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "To : ",
                           style: TextStyle(
@@ -170,6 +179,9 @@ class _request_detailsState extends State<request_details> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Distance : ",
                           style: TextStyle(

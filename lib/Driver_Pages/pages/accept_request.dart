@@ -89,6 +89,9 @@ class accept_request extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Name : ",
                           style: TextStyle(
@@ -109,6 +112,9 @@ class accept_request extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "From : ",
                           style: TextStyle(
@@ -127,10 +133,21 @@ class accept_request extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "To : ${data['Destination Point']}",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "To : ",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${data['Destination Point']}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 10,
@@ -141,6 +158,9 @@ class accept_request extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Distance : ",
                           style: TextStyle(

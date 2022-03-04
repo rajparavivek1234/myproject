@@ -36,22 +36,21 @@ class _mapviewState extends State<mapview> {
   void initState() {
     // ignore: todo
     // TODO: implement initState
-    Permission.locationAlways.isGranted;
+
     super.initState();
 
-    //locatePosition();
-    // _checkPermission(BuildContext context) async {
-    // var permission = await Permission.location.status;
-    // print(permission);
+//     _checkPermission(BuildContext context) async {
+//     var permission = await Permission.location.status;
+//     print(permission);
 
-    // if (!permission.isGranted) {
-    //   await Permission.location.request();
-    // }
+//     if (!permission.isGranted) {
+//       await Permission.location.request();
+//     }
 
-    // if (await Permission.location.isGranted) {
-
-    // }
-    // }
+//     if (await Permission.location.isGranted) {
+// locatePosition();
+//     }
+//     }
   }
 
   // void locatePosition() async {

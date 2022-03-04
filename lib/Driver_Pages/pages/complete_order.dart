@@ -104,6 +104,9 @@ class _complete_orderState extends State<complete_order> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Name : ",
                           style: TextStyle(
@@ -124,6 +127,9 @@ class _complete_orderState extends State<complete_order> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "From : ",
                           style: TextStyle(
@@ -144,6 +150,9 @@ class _complete_orderState extends State<complete_order> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "To : ",
                           style: TextStyle(
@@ -164,6 +173,9 @@ class _complete_orderState extends State<complete_order> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Distance : ",
                           style: TextStyle(
