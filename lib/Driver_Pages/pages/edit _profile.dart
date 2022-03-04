@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, use_key_in_widget_constructors, non_constant_identifier_names, unused_field, prefer_final_fields, prefer_typing_uninitialized_variables, avo, file_names, prefer_const_constructors, body_might_complete_normally_nullable, avoid_print
+// ignore_for_file: camel_case_types, use_key_in_widget_constructors, non_constant_identifier_names, unused_field, prefer_final_fields, prefer_typing_uninitialized_variables, avo, file_names, prefer_const_constructors, body_might_complete_normally_nullable
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myproject/Driver_Pages/pages/complete_order.dart';
 import 'package:myproject/Driver_Pages/pages/profile.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 
@@ -227,7 +226,7 @@ class _edit_profileState extends State<edit_profile> {
                               fit: BoxFit.cover,
                             )
                           : Image.network(
-                              DIMG,
+                              'https://freesvg.org/img/abstract-user-flat-4.png',
                               width: 130,
                               height: 130,
                               fit: BoxFit.cover,
@@ -334,10 +333,10 @@ class _edit_profileState extends State<edit_profile> {
               ),
             ),
             SizedBox(
-              height: 230,
+              height: 100,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 27, top: 30),
+              padding: const EdgeInsets.only(left: 45, top: 30),
               child: InkWell(
                 onTap: () async {
                   if (_formKey.currentState!.validate()) {

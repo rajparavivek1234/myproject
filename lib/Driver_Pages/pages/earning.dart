@@ -83,7 +83,7 @@ class _earningState extends State<earning> {
                                 ),
                               ),
                               Text(
-                                "$TotalPrice",
+                                TotalPrice,
                                 // ignore: prefer_const_constructors
                                 style: TextStyle(
                                   color: Colors.white,

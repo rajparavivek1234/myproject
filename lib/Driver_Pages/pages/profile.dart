@@ -88,6 +88,9 @@ class profile extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Name : ",
                           style: TextStyle(
@@ -108,6 +111,9 @@ class profile extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Date Of Birth : ",
                           style: TextStyle(
@@ -128,6 +134,9 @@ class profile extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Phone no : ",
                           style: TextStyle(
@@ -148,6 +157,9 @@ class profile extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Eimail : ",
                           style: TextStyle(
@@ -168,6 +180,9 @@ class profile extends StatelessWidget {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Address : ",
                           textAlign: TextAlign.center,
