@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:intl/intl.dart';
 import 'package:myproject/Driver_Pages/drawer/DrawerHeader.dart';
 import 'package:myproject/Driver_Pages/pages/driver_home.dart';
 import 'package:myproject/Driver_Pages/pages/home.dart';
@@ -14,6 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'request_details.dart';
 
 class complete_order extends StatefulWidget {
+  String rid = "";
+  complete_order({
+    Key? key,
+    required this.rid,
+  }) : super(key: key);
   @override
   State<complete_order> createState() => _complete_orderState();
 }
@@ -22,6 +28,8 @@ String? coid;
 String FN = "";
 String LN = "";
 String DIMG = "";
+String PaymentMethod = "";
+String PaymentStatus = "";
 
 class _complete_orderState extends State<complete_order> {
   @override
@@ -34,17 +42,59 @@ class _complete_orderState extends State<complete_order> {
 
   @override
   Widget build(BuildContext context) {
+    var now = new DateTime.now();
+    var MONTHS = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    var formatter = new DateFormat('dd-MM-yyyy');
+    String date = now.day.toString() +
+        " " +
+        MONTHS[now.month - 1] +
+        " " +
+        now.year.toString() +
+        ", " +
+        now.hour.toString() +
+        ":" +
+        now.minute.toString() +
+        ":" +
+        now.second.toString();
+
     CollectionReference users = FirebaseFirestore.instance
         .collection('Driver')
         .doc(id)
         .collection('Request');
+
+// Paymentdetails() {
+//   if (PaymentMethod == "COD") {
+//     Text(
+//       "First Receive Payment Then Handover Delivery And Press Complete Button",
+//       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//     );
+//   } else if (PaymentMethod == "Online" && PaymentStatus == "Pending") {
+//     Text(
+//       "Online Payment Is Pending. Ask For Complete Payment",
+//       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//     );
+//   }
+// }
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Order Complete"),
       ),
       body: FutureBuilder<DocumentSnapshot>(
-        future: users.doc(rid).get(),
+        future: users.doc(widget.rid).get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -192,52 +242,134 @@ class _complete_orderState extends State<complete_order> {
                       height: 10,
                     ),
                     // Text(
-                    //   "Total Cost : ${data['Total Cost']} Km",
+                    //   "Total Cost : ${data['Total Cost']}",
                     //   style:
                     //       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     // ),
+                    // Divider(),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              child: Text(
+                                "* Warning *",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 350,
+                              child: Text(
+                                "1. If Payment Method is Cash On Delivery Then First Receive Payment Then Handover Delivery And Press Complete Button",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 350,
+                              child: Text(
+                                "2. If Payment Method Is Online Payment And Online Payment Is Pending. Ask For Complete Payment",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 10,
+                    ),
                     InkWell(
                       onTap: () async {
-                        step = 0;
-                        getdeails();
+                        //step = "0";
+                        if ((PaymentMethod == "Online" &&
+                            PaymentStatus == "Pending")) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text("Payment Is Not Complete By Customer"),
+                              backgroundColor: Colors.black,
+                            ),
+                          );
+                        } else {
+                          await FirebaseFirestore.instance
+                              .collection('History')
+                              .add({
+                            'User ID': "${data['UserID']}",
+                            'Driver ID': id,
+                            'Driver Img': DIMG,
+                            'User Img': "${data['Profile pic']}",
+                            'User First Name': "${data['First Name']}",
+                            'User Last Name': "${data['Last Name']}",
+                            'Driver First Name': FN,
+                            'Driver Last Name': LN,
+                            'Starting Point': "${data['Starting Point']}",
+                            'Destination Point': "${data['Destination Point']}",
+                            'Distance': "${data['Distance']}",
+                            'Total Cost': TotalPrice,
+                          });
 
-                        await FirebaseFirestore.instance
-                            .collection('Driver')
-                            .doc(id)
-                            .collection("Request")
-                            .doc(rid)
-                            .update({
-                          'On Trip': 'No',
-                        });
+                          await FirebaseFirestore.instance
+                              .collection('vehicle')
+                              .doc(vid)
+                              .update({
+                            'On Trip': 'No',
+                          });
 
-                        await FirebaseFirestore.instance
-                            .collection('History')
-                            .add({
-                          'User ID': "${data['UserID']}",
-                          'Driver ID': id,
-                          'Driver Img': DIMG,
-                          'User Img': "${data['Profile pic']}",
-                          'User First Name': "${data['First Name']}",
-                          'User Last Name': "${data['Last Name']}",
-                          'Driver First Name': FN,
-                          'Driver Last Name': LN,
-                          'Starting Point': "${data['Starting Point']}",
-                          'Destination Point': "${data['Destination Point']}",
-                          'Distance': "${data['Distance']}",
-                          'Total Cost': TotalPrice,
-                        });
+                          await FirebaseFirestore.instance
+                              .collection('Driver')
+                              .doc(id)
+                              .collection("Request")
+                              .doc(widget.rid)
+                              .update({
+                            'On Trip': 'No',
+                            'Order Completed': "Yes",
+                          });
 
-                        await FirebaseFirestore.instance
-                            .collection('vehicle')
-                            .doc(vid)
-                            .update({
-                          'On Trip': 'No',
-                        });
+                          await FirebaseFirestore.instance
+                              .collection('Users')
+                              .doc(data['UserID'])
+                              .collection('MyOrders')
+                              .doc(oid)
+                              .update({
+                            'Status': 'Complete',
+                            'Order Complete Date': date,
+                            'Payment Method': PaymentMethod,
+                            'Payment Status': "Complete",
+                          });
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => home()),
-                        );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => home()),
+                          );
+                        }
                       },
                       child: AnimatedContainer(
                         duration: Duration(seconds: 2),
@@ -333,33 +465,25 @@ showDialogFunc(context, img) {
 
 Future<void> getdeails() async {
   //CollectionReference users = FirebaseFirestore.instance.collection('Driver');
-  DocumentSnapshot documentSnapshot =
+  DocumentSnapshot documentSnapshot1 =
       await FirebaseFirestore.instance.collection('Driver').doc(id).get();
-  FN = documentSnapshot['First Name'];
+
+  FN = documentSnapshot1['First Name'];
   print("first name ===== ${FN}");
-  LN = documentSnapshot['Last Name'];
+  LN = documentSnapshot1['Last Name'];
   print("last name ===== ${LN}");
-  DIMG = documentSnapshot["Driver Image"];
+  DIMG = documentSnapshot1["Driver Image"];
   print("Driver image ===== ${DIMG}");
 
-  // FutureBuilder<DocumentSnapshot>(
+  DocumentSnapshot documentSnapshot2 = await FirebaseFirestore.instance
+      .collection('Driver')
+      .doc(id)
+      .collection("Request")
+      .doc(rid)
+      .get();
 
-  //   future: users.doc(id).get(),
-  //   builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-  //     if (snapshot.connectionState == ConnectionState.done) {
-  //       Map<String, dynamic> data =
-  //           snapshot.data!.data() as Map<String, dynamic>;
-
-  //       FN = data['First Name'];
-  //       print("first name ===== ${FN}");
-  //       LN = data['Last Name'];
-  //       print("last name ===== ${LN}");
-  //       DIMG = data["Driver Image"];
-  //       print("Driver image ===== ${DIMG}");
-  //     }
-  //     return Center(
-  //       child: CircularProgressIndicator(),
-  //     );
-  //   },
-  // );
+  PaymentMethod = documentSnapshot2['Payment Method'];
+  print("Payment Method ===== ${PaymentMethod}");
+  PaymentStatus = documentSnapshot2['Payment Status'];
+  print("Payment Status ===== ${PaymentStatus}");
 }

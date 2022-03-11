@@ -2,6 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:myproject/Driver_Pages/drawer/DrawerHeader.dart';
 import 'package:myproject/Driver_Pages/pages/accept_request.dart';
 import 'package:myproject/Driver_Pages/pages/home.dart';
@@ -9,8 +11,16 @@ import 'package:myproject/Driver_Pages/pages/mapview.dart';
 import 'package:myproject/Driver_Pages/pages/request_list.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 
-String? aid;
+String? reqid;
 String TotalPrice = "";
+String FirstName = "";
+String LastName = "";
+String MobileNo = "";
+String DriverImg = "";
+String VehicleName = "";
+String VehicleNo = "";
+String VPrice = "";
+String oid = "";
 
 class request_details extends StatefulWidget {
   String rid = "";
@@ -202,7 +212,33 @@ class _request_detailsState extends State<request_details> {
                     ),
                     InkWell(
                       onTap: () async {
-                        step = 2;
+                        //step = "2";
+                        reqid = widget.rid;
+                        await FirebaseFirestore.instance
+                            .collection('Users')
+                            .doc(data['UserID'])
+                            .collection('MyOrders')
+                            .add({
+                          'Starting Point': data['Starting Point'],
+                          'Destination Point': data['Destination Point'],
+                          'Type Of Goods': data['Goods Type'],
+                          'Driver Name': "${FirstName} ${LastName}",
+                          'Driver Img': DriverImg,
+                          'Phone No': MobileNo,
+                          'Status': 'On The Way',
+                          'Vehicle Name': VehicleName,
+                          'Vehicle No': VehicleNo,
+                          'Distance': data['Distance'],
+                          'Total Price': TotalPrice,
+                          'Price Per KM': VPrice,
+                          'Request ID': rid,
+                          'Driver ID': id,
+                          'Date': data['Date'],
+                          'Time': data['Time'],
+                        }).then((value) {
+                          oid = value.id;
+                        });
+
                         await FirebaseFirestore.instance
                             .collection('Driver')
                             .doc(id)
@@ -211,6 +247,8 @@ class _request_detailsState extends State<request_details> {
                             .update({
                           'Status': '1',
                           'On Trip': 'Yes',
+                          'MyOrderID': oid,
+                          //'Step': step,
                         });
 
                         await FirebaseFirestore.instance
@@ -223,7 +261,9 @@ class _request_detailsState extends State<request_details> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => accept_request(),
+                            builder: (context) => accept_request(
+                              rid: rid,
+                            ),
                           ),
                         );
                       },
@@ -264,7 +304,7 @@ class _request_detailsState extends State<request_details> {
                     ),
                     InkWell(
                       onTap: () async {
-                        step = 0;
+                        //step = "0";
                         await FirebaseFirestore.instance
                             .collection('Driver')
                             .doc(id)
@@ -272,6 +312,7 @@ class _request_detailsState extends State<request_details> {
                             .doc(widget.rid)
                             .update({
                           'Status': '2',
+                          //'step': step,
                         });
 
                         FirebaseFirestore.instance
@@ -286,7 +327,7 @@ class _request_detailsState extends State<request_details> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => home(),
+                            builder: (context) => accept_request(rid: rid),
                           ),
                         );
                         // ScaffoldMessenger.of(context).showSnackBar(
@@ -408,25 +449,18 @@ Future<void> getvdeails() async {
       await FirebaseFirestore.instance.collection('Driver').doc(id).get();
   vid = documentSnapshot['Vehicle ID'];
   print("Vehicle Id ===== ${vid}");
-
-  // FutureBuilder<DocumentSnapshot>(
-
-  //   future: users.doc(id).get(),
-  //   builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-  //     if (snapshot.connectionState == ConnectionState.done) {
-  //       Map<String, dynamic> data =
-  //           snapshot.data!.data() as Map<String, dynamic>;
-
-  //       FN = data['First Name'];
-  //       print("first name ===== ${FN}");
-  //       LN = data['Last Name'];
-  //       print("last name ===== ${LN}");
-  //       DIMG = data["Driver Image"];
-  //       print("Driver image ===== ${DIMG}");
-  //     }
-  //     return Center(
-  //       child: CircularProgressIndicator(),
-  //     );
-  //   },
-  // );
+  MobileNo = documentSnapshot['Phone no'];
+  print("Mobil NO ===== ${MobileNo}");
+  FirstName = documentSnapshot['First Name'];
+  print("first name ===== ${FirstName}");
+  LastName = documentSnapshot['Last Name'];
+  print("last name ===== ${LastName}");
+  DriverImg = documentSnapshot["Driver Image"];
+  print("Driver image ===== ${DriverImg}");
+  VehicleName = documentSnapshot["Vehicle Name"];
+  print("Vehicle Name ===== ${VehicleName}");
+  VehicleNo = documentSnapshot["Vehicle No"];
+  print("Vehicle Name ===== ${VehicleNo}");
+  VPrice = documentSnapshot["Price"];
+  print("Price Per KM ===== ${VPrice}");
 }

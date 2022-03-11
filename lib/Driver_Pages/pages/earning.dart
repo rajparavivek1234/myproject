@@ -1,7 +1,11 @@
 // ignore_for_file: use_key_in_widget_constructors, camel_case_types, unnecessary_const, duplicate_ignore, prefer_const_literals_to_create_immutables, prefer_const_constructors, deprecated_member_use
 
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myproject/Driver_Pages/pages/request_details.dart';
+import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 
 import 'home.dart';
 
@@ -10,7 +14,29 @@ class earning extends StatefulWidget {
   _earningState createState() => _earningState();
 }
 
+Float Earning = 0.0 as Float;
+
 class _earningState extends State<earning> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    calculation();
+  }
+
+  void calculation() async {
+    await FirebaseFirestore.instance
+        .collection("Driver")
+        .doc(id)
+        .collection("Payment")
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        print("================${element['UserFirstName']}================");
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -27,4 +27,5 @@ class MyRoutes {
   static String v_update_documentRoute = "/v_update_document";
   static String request_listRoute = "/request_list";
   static String accept_requestRoute = "/accept_request";
+  static String MyTripsRoute = "/MyTrips";
 }

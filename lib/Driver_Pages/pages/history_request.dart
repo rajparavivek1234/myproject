@@ -169,11 +169,22 @@ class history_request extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    // Text(
-                    //   "Total Cost : ${data['Total Cost']} Km",
-                    //   style:
-                    //       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    // ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Total Cost : ",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${data['Total Cost']} Rs.",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

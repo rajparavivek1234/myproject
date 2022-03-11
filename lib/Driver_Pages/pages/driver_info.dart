@@ -481,6 +481,12 @@ class _driver_infoState extends State<driver_info> {
                             'State': s,
                             'Driver Image': url,
                             'Owner Of Vehicle': 'Yes',
+                            'earning': "0.0",
+                            'Total Withdraw': "0.0",
+                            'Total earning': "0.0",
+                            'Total User': "0",
+                            'User Rating': "0",
+                            'Avg Rating': "0",
                           });
                           pr.hide().whenComplete(() {
                             Navigator.push(
@@ -514,6 +520,12 @@ class _driver_infoState extends State<driver_info> {
                             'State': s,
                             'Driver Image': url,
                             'Owner Of Vehicle': 'Yes',
+                            'earning': "0.0",
+                            'Total Withdraw': "0.0",
+                            'Total earning': "0.0",
+                            'Total User': "0",
+                            'User Rating': "0",
+                            'Avg Rating': "0",
                           });
 
                           pr.hide().whenComplete(() {

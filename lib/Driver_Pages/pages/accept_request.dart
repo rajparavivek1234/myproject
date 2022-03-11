@@ -3,13 +3,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myproject/Driver_Pages/pages/home.dart';
+import 'package:myproject/Driver_Pages/pages/mapview.dart';
 import 'package:myproject/Driver_Pages/pages/request_list.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 import 'package:myproject/Driver_Pages/pages/verifydelivery.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class accept_request extends StatelessWidget {
+class accept_request extends StatefulWidget {
+  String rid = "";
+  accept_request({
+    Key? key,
+    required this.rid,
+  }) : super(key: key);
+  @override
+  State<accept_request> createState() => _accept_requestState();
+}
+
+class _accept_requestState extends State<accept_request> {
   String _url = "";
+
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance
         .collection('Driver')
@@ -29,7 +41,7 @@ class accept_request extends StatelessWidget {
             }),
       ),
       body: FutureBuilder<DocumentSnapshot>(
-        future: users.doc(rid).get(),
+        future: users.doc(widget.rid).get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -177,7 +189,7 @@ class accept_request extends StatelessWidget {
                     ),
                     Divider(),
                     SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -228,49 +240,99 @@ class accept_request extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     InkWell(
-                    //       onTap: () async {},
-                    //       child: AnimatedContainer(
-                    //         duration: Duration(seconds: 2),
-                    //         width: 150,
-                    //         height: 40,
-                    //         alignment: Alignment.center,
-                    //         child: Text("Reciving point",
-                    //             style: TextStyle(
-                    //                 fontSize: 14,
-                    //                 letterSpacing: 2.2,
-                    //                 color: Colors.white)),
-                    //         decoration: BoxDecoration(
-                    //             color: Colors.deepPurple,
-                    //             borderRadius: BorderRadius.circular(30)),
-                    //       ),
-                    //     ),
-                    //     InkWell(
-                    //       onTap: () async {},
-                    //       child: AnimatedContainer(
-                    //         duration: Duration(seconds: 2),
-                    //         width: 150,
-                    //         height: 40,
-                    //         alignment: Alignment.center,
-                    //         child: Text("Delivery point",
-                    //             style: TextStyle(
-                    //                 fontSize: 14,
-                    //                 letterSpacing: 2.2,
-                    //                 color: Colors.white)),
-                    //         decoration: BoxDecoration(
-                    //             color: Colors.deepPurple,
-                    //             borderRadius: BorderRadius.circular(30)),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            map = 1;
+                            await getmapdeails();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => home()),
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(seconds: 2),
+                            width: 160,
+                            height: 40,
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  color: Colors.white,
+                                  size: 25,
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Text("Reciving point",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.circular(30)),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            map = 2;
+                            await getmapdeails();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => home()),
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(seconds: 2),
+                            width: 160,
+                            height: 40,
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Delivery point",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.white,
+                                  size: 25,
+                                ),
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.circular(30)),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     InkWell(
                       onTap: () async {

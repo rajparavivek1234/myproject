@@ -1,17 +1,31 @@
-// ignore_for_file: unused_local_variable, unnecessary_new, prefer_final_fields, unused_field, sized_box_for_whitespace, camel_case_types, prefer_const_constructors_in_immutables, prefer_const_constructors, duplicate_ignore, unused_import, unrelated_type_equality_checks, avoid_print
+// ignore_for_file: unused_local_variable, unnecessary_new, prefer_final_fields, unused_field, sized_box_for_whitespace, camel_case_types, prefer_const_constructors_in_immutables, prefer_const_constructors, duplicate_ignore, unused_import, unrelated_type_equality_checks, avoid_print, avoid_function_literals_in_foreach_calls
 
 import 'dart:async';
+import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_place/google_place.dart';
 import 'package:myproject/Driver_Pages/pages/accept_request.dart';
 import 'package:myproject/Driver_Pages/pages/complete_order.dart';
 import 'package:myproject/Driver_Pages/pages/request_details.dart';
 import 'package:myproject/Driver_Pages/pages/request_list.dart';
+import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_api_headers/google_api_headers.dart';
+import 'package:google_maps_webservice/places.dart';
 
-int step = 0;
+//String step = "0";
+Timer? timer;
+late double slongitude = 0, slatitude = 0, dlongitude = 0, dlatitude = 0;
+int map = 0;
 
 class mapview extends StatefulWidget {
   mapview({Key? key}) : super(key: key);
@@ -21,14 +35,81 @@ class mapview extends StatefulWidget {
 }
 
 Position? currentPosition;
+Position? s;
 
 class _mapviewState extends State<mapview> {
   PermissionStatus? _permissionStatus;
+  String source = "";
 
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   late GoogleMapController newGoogleMapController;
 
   var geolocator = Geolocator();
+  Set<Marker> _markers = {};
+
+  String googleApikey = "AIzaSyBLcpDnnknaH_SGCVxq_lCnmQ3HDhrezfI";
+
+  final Set<Polyline> _polyline = {};
+  PolylinePoints polylinePoints = PolylinePoints();
+  Map<PolylineId, Polyline> polylines = {};
+
+  getStartDirections() async {
+    List<LatLng> polylineCoordinates = [];
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleApikey,
+      PointLatLng(currentPosition!.latitude, currentPosition!.longitude),
+      PointLatLng(slatitude, slongitude),
+      //travelMode: TravelMode.driving,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+    addPolyLine(polylineCoordinates);
+
+    timer =
+        Timer.periodic(Duration(seconds: 7), (Timer t) => getStartDirections());
+  }
+
+  getDestinationDirections() async {
+    List<LatLng> polylineCoordinates = [];
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleApikey,
+      PointLatLng(currentPosition!.latitude, currentPosition!.longitude),
+      PointLatLng(dlatitude, dlongitude),
+      //travelMode: TravelMode.driving,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+    addPolyLine(polylineCoordinates);
+
+    timer = Timer.periodic(
+        Duration(seconds: 7), (Timer t) => getDestinationDirections());
+  }
+
+  addPolyLine(List<LatLng> polylineCoordinates) {
+    PolylineId id = PolylineId("poly");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.blueAccent,
+      points: polylineCoordinates,
+      width: 8,
+    );
+    polylines[id] = polyline;
+    setState(() {});
+  }
 
   //double bottompeddingofmap = 0.0;
 
@@ -38,41 +119,77 @@ class _mapviewState extends State<mapview> {
     // TODO: implement initState
 
     super.initState();
-
-//     _checkPermission(BuildContext context) async {
-//     var permission = await Permission.location.status;
-//     print(permission);
-
-//     if (!permission.isGranted) {
-//       await Permission.location.request();
-//     }
-
-//     if (await Permission.location.isGranted) {
-// locatePosition();
-//     }
-//     }
+    _checkPermission(context);
+    if (map == 1) {
+      startCordinate();
+      getStartDirections();
+    } else if (map == 2) {
+      destinationCordinate();
+      getDestinationDirections();
+    } else {
+      map = 0;
+    }
   }
 
-  // void locatePosition() async {
-  //   currentPosition = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
-  //   print(currentPosition);
+  void _checkPermission(BuildContext context) async {
+    var permission = await Permission.location.status;
+    print(permission);
 
-  //   LatLng latlngPosition =
-  //       LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    if (!permission.isGranted) {
+      await Permission.location.request();
+    }
 
-  //   CameraPosition cameraPosition =
-  //       new CameraPosition(target: latlngPosition, zoom: 14);
-  //   newGoogleMapController.animateCamera(
-  //     CameraUpdate.newCameraPosition(cameraPosition),
-  //   );
-  //   locatePosition();
-  // }
+    if (await Permission.location.isGranted) {
+      locatePosition();
+    }
+  }
+
+  Future<void> startCordinate() async {
+    setState(() {
+      _markers.add(Marker(
+          markerId: MarkerId('1'),
+          position: LatLng(slatitude, slongitude),
+          infoWindow: InfoWindow(title: 'Starting Position')));
+    });
+  }
+
+  Future<void> destinationCordinate() async {
+    setState(() {
+      _markers.add(Marker(
+          markerId: MarkerId('2'),
+          position: LatLng(dlatitude, dlongitude),
+          infoWindow: InfoWindow(title: 'Delivery Position')));
+    });
+  }
+
+  void locatePosition() async {
+    currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    print(currentPosition);
+
+    LatLng latlngPosition =
+        LatLng(currentPosition!.latitude, currentPosition!.longitude);
+
+    CameraPosition cameraPosition =
+        new CameraPosition(target: latlngPosition, zoom: 14);
+    newGoogleMapController.animateCamera(
+      CameraUpdate.newCameraPosition(cameraPosition),
+    );
+
+    timer =
+        Timer.periodic(Duration(seconds: 10), (Timer t) => locatePosition());
+  }
 
 // ignore: prefer_const_constructors
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(22.5052586, 73.4653031),
+    target: LatLng(21.5052586, 73.4653031),
     zoom: 17,
   );
 
@@ -88,18 +205,19 @@ class _mapviewState extends State<mapview> {
         body: Stack(
           children: <Widget>[
             GoogleMap(
-              //padding: EdgeInsets.only(bottom: bottompeddingofmap),
               initialCameraPosition: _kGooglePlex,
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
               mapType: MapType.normal,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: false,
+              markers: _markers,
+              polylines: Set<Polyline>.of(polylines.values),
               onMapCreated: (GoogleMapController controller) {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
 
-                //locatePosition();
+                locatePosition();
               },
             ),
             Column(
@@ -210,33 +328,38 @@ class _mapviewState extends State<mapview> {
                     // ),
                     InkWell(
                       onTap: () async {
-                        if (step == 0) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => request_list()),
-                          );
-                        } else if (step == 1) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => request_details(
-                                      rid: rid,
-                                    )),
-                          );
-                        } else if (step == 2) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => accept_request()),
-                          );
-                        } else if (step == 3) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => complete_order()),
-                          );
-                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => request_list()),
+                        );
+                        // if (step == "0") {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => request_list()),
+                        //   );
+                        // } else if (step == "1") {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => request_details(
+                        //               rid: rid,
+                        //             )),
+                        //   );
+                        // } else if (step == "2") {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => accept_request()),
+                        //   );
+                        // } else if (step == "3") {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => complete_order()),
+                        //   );
+                        // }
                       },
                       child: AnimatedContainer(
                         duration: Duration(seconds: 2),
@@ -269,6 +392,33 @@ class _mapviewState extends State<mapview> {
     );
   }
 }
+
+Future<void> getmapdeails() async {
+  //CollectionReference users = FirebaseFirestore.instance.collection('Driver');
+  DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      .collection('Driver')
+      .doc(id)
+      .collection("Request")
+      .doc(reqid)
+      .get();
+
+  slatitude = documentSnapshot['Source lat'];
+  print("Starting Latitude ===== ${slatitude}");
+  slongitude = documentSnapshot['Source lang'];
+  print("Starting Longitude ===== ${slongitude}");
+
+  dlatitude = documentSnapshot['Destination lat'];
+  print("Destination Latitude ===== ${dlatitude}");
+  dlongitude = documentSnapshot['Destination lang'];
+  print("Destination Longitude ===== ${dlongitude}");
+}
+
+
+
+
+
+
+
 
 
 // // // ignore_for_file: non_constant_identifier_names, prefer_const_constructors, unused_field, prefer_final_fields, unnecessary_new, prefer_const_literals_to_create_immutables, avoid_print, camel_case_types, avoid_function_literals_in_foreach_calls, avoid_init_to_null, use_key_in_widget_constructors

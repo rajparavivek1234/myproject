@@ -180,7 +180,7 @@ class _Phone_NumberState extends State<Phone_Number> {
                       .doc(MyDriverID)
                       .update({
                     'DriverId': MyDriverID,
-                    'Phone no': dialCodeDigits + number,
+                    'Phone no': "${dialCodeDigits} ${number}",
                   });
 
                   await Future.delayed(Duration(seconds: 2));

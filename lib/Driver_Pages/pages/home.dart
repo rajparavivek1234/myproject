@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:myproject/All_User_Pages/google_sign_in/google_sign_in.dart';
 import 'package:myproject/Driver_Pages/drawer/DrawerHeader.dart';
 import 'package:myproject/Driver_Pages/drawer/DrawerItem.dart';
+import 'package:myproject/Driver_Pages/pages/MyTrips.dart';
 import 'package:myproject/Driver_Pages/pages/accept_request.dart';
 import 'package:myproject/Driver_Pages/pages/complete_order.dart';
 import 'package:myproject/Driver_Pages/pages/driver_home.dart';
+import 'package:myproject/Driver_Pages/pages/mapview.dart';
 import 'package:myproject/Driver_Pages/pages/request_details.dart';
 import 'package:myproject/Driver_Pages/pages/request_list.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
@@ -123,16 +125,27 @@ class _homeState extends State<home> {
             createDrawerHeader(),
             Divider(),
             createDrawerBodyItem(
-              icon: Icons.home,
-              text: 'Home',
-              onTap: () =>
-                  Navigator.pushReplacementNamed(context, MyRoutes.homeRoute),
-            ),
+                icon: Icons.home,
+                text: 'Home',
+                onTap: () => {
+                      map = 0,
+                      Navigator.pushReplacementNamed(
+                          context, MyRoutes.homeRoute),
+                    }),
             createDrawerBodyItem(
               icon: Icons.account_circle,
               text: 'Profile',
               onTap: () => Navigator.pushReplacementNamed(
                   context, MyRoutes.profileRoute),
+            ),
+            createDrawerBodyItem(
+              icon: Icons.home,
+              text: 'My Trip',
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MyTrips(),
+                ),
+              ),
             ),
 
             createDrawerBodyItem(
@@ -178,11 +191,7 @@ class _homeState extends State<home> {
                 onTap: () {
                   showAlertDialog(context);
                 }),
-            // createDrawerBodyItem(
-            //   icon: Icons.exit_to_app,
-            //   text: 'Logout',
-            //   onTap: () => showAlertDialog(context),
-            // ),
+
             SizedBox(
               height: 250,
             ),

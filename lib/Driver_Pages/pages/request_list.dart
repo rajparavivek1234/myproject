@@ -43,8 +43,13 @@ class _request_listState extends State<request_list> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream:
-            db.collection('Driver').doc(id).collection('Request').snapshots(),
+        stream: db
+            .collection('Driver')
+            .doc(id)
+            .collection('Request')
+            .where("On Trip", isEqualTo: "No")
+            .where("Order Completed", isEqualTo: "No")
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -72,9 +77,17 @@ class _request_listState extends State<request_list> {
                               backgroundImage: NetworkImage(doc["Profile pic"]),
                               backgroundColor: Colors.transparent,
                             ),
-                            onTap: () {
-                              step = 1;
+                            onTap: () async {
+                              //step = "1";
                               rid = doc.id;
+                              // await FirebaseFirestore.instance
+                              //     .collection('Driver')
+                              //     .doc(id)
+                              //     .collection("Request")
+                              //     .doc(rid)
+                              //     .update({
+                              //   //'Step': step,
+                              // });
                               print(rid);
                               Navigator.of(context).push(
                                 MaterialPageRoute(

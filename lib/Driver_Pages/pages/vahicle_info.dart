@@ -420,6 +420,9 @@ class _vahicle_infoState extends State<vahicle_info> {
                         'On Trip': 'No',
                         'Approved': 'No',
                         'Driver Id': MyDriverID,
+                        'Total User': "0",
+                        'User Rating': "0",
+                        'Avg Rating': "0",
                       }).then((value) {
                         //print(value.id);
                         myentryid1 = value.id;

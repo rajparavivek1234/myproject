@@ -21,6 +21,8 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'MyTrips.dart';
+
 class verifydelivery extends StatefulWidget {
   final String phone;
   final String codeDigits;
@@ -187,11 +189,13 @@ class _verifydeliveryState extends State<verifydelivery> {
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString("isMobileAdded", "Yes");
                             pr.hide().whenComplete(() {
-                              step = 3;
+                              //step = "3";
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => complete_order(),
+                                  builder: (context) => complete_order(
+                                    rid: rid,
+                                  ),
                                 ),
                               );
                             });
