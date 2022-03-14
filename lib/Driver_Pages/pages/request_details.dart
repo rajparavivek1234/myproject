@@ -67,9 +67,20 @@ class _request_detailsState extends State<request_details> {
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
+
             TotalPrice =
                 (double.parse(data['Distance']) * double.parse(data['Price']))
                     .toString();
+
+            slatitude = data['Source lat'];
+            print("Starting Latitude ===== ${slatitude}");
+            slongitude = data['Source lang'];
+            print("Starting Longitude ===== ${slongitude}");
+
+            dlatitude = data['Destination lat'];
+            print("Destination Latitude ===== ${dlatitude}");
+            dlongitude = data['Destination lang'];
+            print("Destination Longitude ===== ${dlongitude}");
 
             return Material(
               child: Center(
@@ -252,10 +263,24 @@ class _request_detailsState extends State<request_details> {
                         });
 
                         await FirebaseFirestore.instance
+                            .collection('Driver')
+                            .doc(id)
+                            .update({
+                          'On Trip': 'Yes',
+                          //'Step': step,
+                        });
+
+                        await FirebaseFirestore.instance
                             .collection('vehicle')
                             .doc(vid)
                             .update({
                           'On Trip': 'Yes',
+                          'Driver Latitude': currentPosition!.latitude,
+                          'Driver Longitude': currentPosition!.longitude,
+                          'sLatitude': slatitude,
+                          'sLongitude': slongitude,
+                          'dLatitude': dlatitude,
+                          'dLongitude': dlongitude,
                         });
 
                         Navigator.push(

@@ -454,6 +454,8 @@ showDialogFunc(context, img) {
   );
 }
 
+void updateLocation(){}
+
 
 // ignore_for_file: file_names
 // // ignore_for_file: deprecated_member_use, prefer_const_constructors, camel_case_types, must_be_immutable, file_names, use_key_in_widget_constructors, avoid_print, unnecessary_brace_in_string_interps, annotate_overrides, unused_local_variable, unused_element

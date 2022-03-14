@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, unnecessary_const, prefer_const_constructors, use_key_in_widget_constructors, camel_case_types, duplicate_ignore
 
 import 'package:flutter/material.dart';
+import 'package:myproject/Driver_Pages/pages/driver_document.dart';
 import 'package:myproject/Driver_Pages/pages/driver_info.dart';
 import 'package:myproject/Driver_Pages/pages/home.dart';
 import 'package:myproject/Driver_Pages/pages/upload_document.dart';
@@ -83,6 +84,7 @@ class _d_update_documentState extends State<d_update_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 2;
                       document = 'Licence';
                       Navigator.push(
                         context,
@@ -119,6 +121,7 @@ class _d_update_documentState extends State<d_update_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 2;
                       document = 'Address Proof';
                       Navigator.push(
                         context,

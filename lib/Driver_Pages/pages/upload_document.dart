@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:myproject/Driver_Pages/pages/d_update_document.dart';
 import 'package:myproject/Driver_Pages/pages/dando_document.dart';
 import 'package:myproject/Driver_Pages/pages/driver_document.dart';
+import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 import 'package:myproject/Utils/routes.dart';
 
 import 'package:path/path.dart';
@@ -99,7 +101,7 @@ class _upload_documentState extends State<upload_document> {
                 } else {
                   await FirebaseFirestore.instance
                       .collection('Driver')
-                      .doc(MyDriverID)
+                      .doc(id)
                       .update({
                     '$document': urlDownload,
                   });
@@ -114,8 +116,14 @@ class _upload_documentState extends State<upload_document> {
                   } else if (document == "Owner Address Proof") {
                     e1 = 1;
                   }
-
-                  Navigator.pop(context, MyRoutes.driver_documentRoute);
+                  if (page == 1) {
+                    Navigator.pop(context, MyRoutes.driver_documentRoute);
+                  } else if (page == 2) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => d_update_document()));
+                  }
                 }
               },
               child: AnimatedContainer(

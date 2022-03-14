@@ -6,6 +6,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:myproject/Driver_Pages/drawer/DrawerHeader.dart';
 import 'package:myproject/Driver_Pages/pages/driver_home.dart';
+import 'package:myproject/Driver_Pages/pages/earning.dart';
 import 'package:myproject/Driver_Pages/pages/home.dart';
 import 'package:myproject/Driver_Pages/pages/mapview.dart';
 import 'package:myproject/Driver_Pages/pages/request_list.dart';
@@ -30,6 +31,8 @@ String LN = "";
 String DIMG = "";
 String PaymentMethod = "";
 String PaymentStatus = "";
+String tempEarning = "";
+String tempTotalEarning = "";
 
 class _complete_orderState extends State<complete_order> {
   @override
@@ -100,6 +103,24 @@ class _complete_orderState extends State<complete_order> {
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
+            PaymentMethod = data['Payment Method'];
+            print("Payment Method ===== ${PaymentMethod}");
+            PaymentStatus = data['Payment Status'];
+            print("Payment Status ===== ${PaymentStatus}");
+
+            TotalPrice =
+                (double.parse(data['Distance']) * double.parse(data['Price']))
+                    .toString();
+            print("Total Price === ${TotalPrice}");
+
+            Earning = (double.parse(tempEarning) + double.parse(TotalPrice))
+                .toString();
+            TotalEarning =
+                (double.parse(tempTotalEarning) + double.parse(TotalPrice))
+                    .toString();
+
+            oid = data['MyOrderID'];
+            print("Order ID === ${oid}");
 
             return Material(
               child: Center(
@@ -357,7 +378,7 @@ class _complete_orderState extends State<complete_order> {
                               .collection('Users')
                               .doc(data['UserID'])
                               .collection('MyOrders')
-                              .doc(oid)
+                              .doc(id)
                               .update({
                             'Status': 'Complete',
                             'Order Complete Date': date,
@@ -365,6 +386,24 @@ class _complete_orderState extends State<complete_order> {
                             'Payment Status': "Complete",
                           });
 
+                          if (PaymentMethod == "COD") {
+                            await FirebaseFirestore.instance
+                                .collection('Driver')
+                                .doc(id)
+                                .update({
+                              'On Trip': 'No',
+                              'Total earning': TotalEarning,
+                            });
+                          } else {
+                            await FirebaseFirestore.instance
+                                .collection('Driver')
+                                .doc(id)
+                                .update({
+                              'On Trip': 'No',
+                              'earning': Earning,
+                              'Total earning': TotalEarning,
+                            });
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => home()),
@@ -474,16 +513,10 @@ Future<void> getdeails() async {
   print("last name ===== ${LN}");
   DIMG = documentSnapshot1["Driver Image"];
   print("Driver image ===== ${DIMG}");
-
-  DocumentSnapshot documentSnapshot2 = await FirebaseFirestore.instance
-      .collection('Driver')
-      .doc(id)
-      .collection("Request")
-      .doc(rid)
-      .get();
-
-  PaymentMethod = documentSnapshot2['Payment Method'];
-  print("Payment Method ===== ${PaymentMethod}");
-  PaymentStatus = documentSnapshot2['Payment Status'];
-  print("Payment Status ===== ${PaymentStatus}");
+  tempEarning = documentSnapshot1["earning"];
+  print("earning ===== ${tempEarning}");
+  tempTotalEarning = documentSnapshot1["Total earning"];
+  print("total earning ===== ${tempTotalEarning}");
+  vid = documentSnapshot1["Vehicle ID"];
+  print("Vehicle ID ===== ${vid}");
 }

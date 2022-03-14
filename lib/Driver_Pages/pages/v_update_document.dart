@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types, use_key_in_widget_constructors, deprecated_member_use, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:myproject/Driver_Pages/pages/driver_document.dart';
 import 'package:myproject/Driver_Pages/pages/driver_info.dart';
 import 'package:myproject/Driver_Pages/pages/v_upload_document.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
@@ -85,6 +86,7 @@ class _v_update_documentState extends State<v_update_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 2;
                       document = 'PUC';
                       Navigator.push(
                         context,
@@ -125,6 +127,7 @@ class _v_update_documentState extends State<v_update_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 2;
                       document = 'Insurance Policy';
                       Navigator.push(
                         context,

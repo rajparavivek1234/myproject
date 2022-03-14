@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:myproject/Driver_Pages/pages/driver_document.dart';
+import 'package:myproject/Driver_Pages/pages/v_update_document.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_document.dart';
 import 'package:myproject/Utils/routes.dart';
 
@@ -121,8 +123,14 @@ class _v_upload_documentState extends State<v_upload_document> {
                   } else if (document == "Ragistration Document") {
                     i1 = 1;
                   }
-
-                  Navigator.pop(context, MyRoutes.vahicle_documentRoute);
+                  if (page == 1) {
+                    Navigator.pop(context, MyRoutes.vahicle_documentRoute);
+                  } else if (page == 2) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => v_update_document()));
+                  }
                 }
               },
               child: AnimatedContainer(

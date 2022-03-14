@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -13,6 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:myproject/Driver_Pages/pages/accept_request.dart';
 import 'package:myproject/Driver_Pages/pages/complete_order.dart';
+import 'package:myproject/Driver_Pages/pages/driver_info.dart';
 import 'package:myproject/Driver_Pages/pages/request_details.dart';
 import 'package:myproject/Driver_Pages/pages/request_list.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
@@ -26,6 +28,8 @@ import 'package:google_maps_webservice/places.dart';
 Timer? timer;
 late double slongitude = 0, slatitude = 0, dlongitude = 0, dlatitude = 0;
 int map = 0;
+String? dfname;
+String? dfimage;
 
 class mapview extends StatefulWidget {
   mapview({Key? key}) : super(key: key);
@@ -413,6 +417,15 @@ Future<void> getmapdeails() async {
   print("Destination Longitude ===== ${dlongitude}");
 }
 
+Future<void> getFeedBackDeails() async {
+  DocumentSnapshot documentSnapshot =
+      await FirebaseFirestore.instance.collection('Driver').doc(id).get();
+
+  dfname = "${documentSnapshot['First Name']} ${documentSnapshot['Last Name']}";
+  print("full name ===== ${dfname}");
+  dfimage = documentSnapshot["Driver Image"];
+  print("Driver image ===== ${dfimage}");
+}
 
 
 

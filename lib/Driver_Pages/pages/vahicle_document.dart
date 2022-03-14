@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, camel_case_types, must_be_immutable, avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore, unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:myproject/Driver_Pages/pages/driver_document.dart';
 import 'package:myproject/Driver_Pages/pages/driver_info.dart';
 import 'package:myproject/Driver_Pages/pages/home.dart';
 import 'package:myproject/Driver_Pages/pages/v_upload_document.dart';
@@ -55,6 +56,7 @@ class _vahicle_documentState extends State<vahicle_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'RC Book';
                       Navigator.push(
                         context,
@@ -96,6 +98,7 @@ class _vahicle_documentState extends State<vahicle_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'PUC';
                       Navigator.push(
                         context,
@@ -137,6 +140,7 @@ class _vahicle_documentState extends State<vahicle_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'Insurance Policy';
                       Navigator.push(
                         context,
@@ -178,6 +182,7 @@ class _vahicle_documentState extends State<vahicle_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'Ragistration Document';
                       Navigator.push(
                         context,

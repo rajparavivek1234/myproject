@@ -16,6 +16,7 @@ class driver_document extends StatefulWidget {
 }
 
 int a1 = 0, b1 = 0, c1 = 0;
+int page = 0;
 
 class _driver_documentState extends State<driver_document> {
   String? myentryid1;
@@ -51,6 +52,7 @@ class _driver_documentState extends State<driver_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'Aadhar Card';
                       Navigator.push(
                         context,
@@ -89,6 +91,7 @@ class _driver_documentState extends State<driver_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'Licence';
                       Navigator.push(
                         context,
@@ -127,6 +130,7 @@ class _driver_documentState extends State<driver_document> {
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: RaisedButton(
                     onPressed: () {
+                      page = 1;
                       document = 'Address Proof';
                       Navigator.push(
                         context,
