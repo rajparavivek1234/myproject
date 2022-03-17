@@ -431,7 +431,7 @@ showDialogFunc(context, img) {
                   height: 10,
                 ),
                 Text(
-                  "Vehicle Image",
+                  "Driver Image",
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(

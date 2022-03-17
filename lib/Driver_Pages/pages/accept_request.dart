@@ -417,7 +417,7 @@ showDialogFunc(context, img) {
                   height: 10,
                 ),
                 Text(
-                  "Vehicle Image",
+                  "Driver Image",
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(
@@ -454,7 +454,7 @@ showDialogFunc(context, img) {
   );
 }
 
-void updateLocation(){}
+void updateLocation() {}
 
 
 // ignore_for_file: file_names

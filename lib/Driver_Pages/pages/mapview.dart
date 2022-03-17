@@ -40,6 +40,7 @@ class mapview extends StatefulWidget {
 
 Position? currentPosition;
 Position? s;
+String reqno = "";
 
 class _mapviewState extends State<mapview> {
   PermissionStatus? _permissionStatus;
@@ -199,6 +200,18 @@ class _mapviewState extends State<mapview> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore.instance
+        .collection("Driver")
+        .doc(id)
+        .collection("Request")
+        .where("On Trip", isEqualTo: "No")
+        .where("Order Completed", isEqualTo: "No")
+        .get()
+        .then((value) {
+      setState(() {
+        reqno = value.size.toString();
+      });
+    });
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
@@ -337,46 +350,48 @@ class _mapviewState extends State<mapview> {
                           MaterialPageRoute(
                               builder: (context) => request_list()),
                         );
-                        // if (step == "0") {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => request_list()),
-                        //   );
-                        // } else if (step == "1") {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => request_details(
-                        //               rid: rid,
-                        //             )),
-                        //   );
-                        // } else if (step == "2") {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => accept_request()),
-                        //   );
-                        // } else if (step == "3") {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => complete_order()),
-                        //   );
-                        // }
                       },
                       child: AnimatedContainer(
                         duration: Duration(seconds: 2),
                         width: 200,
                         height: 50,
                         alignment: Alignment.center,
-                        child: Text(
-                          "Request",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Text(
+                              "Request",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              height: 20,
+                              width: 20,
+                              child: Center(
+                                child: Text(reqno),
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 2,
+                                    blurRadius: 6,
+                                    offset: Offset(
+                                        0, 2), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         decoration: BoxDecoration(
                             color: Colors.deepPurple,

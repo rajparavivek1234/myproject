@@ -2,7 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myproject/Driver_Pages/pages/request_details.dart';
 import 'package:myproject/Driver_Pages/pages/vahicle_info.dart';
 
 String? driver_img;
@@ -125,5 +124,64 @@ Widget createDrawerHeader() {
     //     ),
     //   ],
     // ),
+  );
+}
+
+showDialogFunc(context, img) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Center(
+        child: Material(
+          type: MaterialType.transparency,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.all(5),
+            height: 400,
+            width: MediaQuery.of(context).size.width * 0.85,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Driver Image",
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  height: 2,
+                  width: 500,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.network(
+                    img,
+                    width: 300,
+                    height: 300,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
   );
 }

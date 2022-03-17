@@ -120,9 +120,17 @@ class _withdrawState extends State<withdraw> {
                               .add({
                             'Driver ID': id,
                             'Withdraw Ammount': withdrawal_amount,
-                            'Total Balance': data['earning'],
+                            'driver name':
+                                "${data['First Name']} ${data['Last Name']}",
+                            'Driver Image': data["Driver Image"],
+                            'Status': "0",
                             //'Step': step,
                           });
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => earning()),
+                          );
                         }
                       },
                       child: AnimatedContainer(
@@ -148,7 +156,6 @@ class _withdrawState extends State<withdraw> {
               ),
             );
           }
-
           return Center(
             child: CircularProgressIndicator(),
           );

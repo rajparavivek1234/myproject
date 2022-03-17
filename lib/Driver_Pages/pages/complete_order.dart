@@ -103,7 +103,7 @@ class _complete_orderState extends State<complete_order> {
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
-            PaymentMethod = data['Payment Method'];
+            PaymentMethod = data['Payment Method'].toString();
             print("Payment Method ===== ${PaymentMethod}");
             PaymentStatus = data['Payment Status'];
             print("Payment Status ===== ${PaymentStatus}");
@@ -262,15 +262,24 @@ class _complete_orderState extends State<complete_order> {
                     SizedBox(
                       height: 10,
                     ),
-                    // Text(
-                    //   "Total Cost : ${data['Total Cost']}",
-                    //   style:
-                    //       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    // ),
-                    // Divider(),
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
+                    Row(
+                      children: [
+                        Text(
+                          "Payment Method : ",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          PaymentMethod,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Column(
                       children: [
                         Row(
@@ -372,13 +381,14 @@ class _complete_orderState extends State<complete_order> {
                               .update({
                             'On Trip': 'No',
                             'Order Completed': "Yes",
+                            'Payment Status': "Complete"
                           });
 
                           await FirebaseFirestore.instance
                               .collection('Users')
                               .doc(data['UserID'])
                               .collection('MyOrders')
-                              .doc(id)
+                              .doc(oid)
                               .update({
                             'Status': 'Complete',
                             'Order Complete Date': date,
@@ -390,11 +400,37 @@ class _complete_orderState extends State<complete_order> {
                             await FirebaseFirestore.instance
                                 .collection('Driver')
                                 .doc(id)
+                                .collection('Transactions')
+                                .add({
+                              'Name':
+                                  "${data['First Name']} ${data['Last Name']}",
+                              'Ammount': TotalPrice,
+                              'Method': "COD",
+                              'Status': "Earned",
+                              'Date': date,
+                            });
+
+                            await FirebaseFirestore.instance
+                                .collection('Driver')
+                                .doc(id)
                                 .update({
                               'On Trip': 'No',
                               'Total earning': TotalEarning,
                             });
                           } else {
+                            await FirebaseFirestore.instance
+                                .collection('Driver')
+                                .doc(id)
+                                .collection('Transections')
+                                .add({
+                              'Name':
+                                  "${data['First Name']} ${data['Last Name']}",
+                              'Ammount': TotalPrice,
+                              'Method': "online",
+                              'Status': "Earned",
+                              'Date': date,
+                            });
+
                             await FirebaseFirestore.instance
                                 .collection('Driver')
                                 .doc(id)
@@ -465,7 +501,7 @@ showDialogFunc(context, img) {
                   height: 10,
                 ),
                 Text(
-                  "Vehicle Image",
+                  "Driver Image",
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(
